@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Faisal Alrashed — Data &amp; AI</title>
+<meta name="description" content="Data and AI portfolio of Faisal Alrashed: university projects, cooperative training at TCC, and Khuta.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Concept: a short case-study book. Cover → three chapters → each chapter a
+   sequence of cases that hands off to the next chapter. Light, quiet, one accent. */
+:root {
+  --paper: #f7f7f4;
+  --sheet: #ffffff;
+  --ink: #161b19;
+  --ink-2: #5b6661;
+  --rule: #e2e5e1;
+  --accent: #1f5c4a;
+  --accent-soft: #e5eee9;
+  --mark: #b97a12;
+  --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --serif: "IBM Plex Serif", Georgia, serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --ease: cubic-bezier(.22,.61,.36,1);
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+img { max-width: 100%; display: block; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+.wrap { max-width: 980px; margin: 0 auto; padding-inline: 22px; }
+
+/* ---------- top bar ---------- */
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: color-mix(in srgb, var(--paper) 88%, transparent); backdrop-filter: saturate(1.2) blur(6px); border-bottom: 1px solid transparent; transition: border-color .3s; }
+.bar.scrolled { border-bottom-color: var(--rule); }
+.bar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 14px; }
+.brand { font: 600 15px/1 var(--sans); letter-spacing: -.01em; background: none; border: 0; padding: 0; cursor: pointer; }
+.nav { display: flex; gap: 4px; flex-wrap: wrap; }
+.nav button { background: none; border: 0; cursor: pointer; font: 500 13.5px/1 var(--sans); color: var(--ink-2); padding: 8px 10px; border-radius: 6px; transition: color .2s, background .2s; }
+.nav button:hover { color: var(--ink); background: var(--sheet); }
+.nav button[aria-current="page"] { color: var(--accent); background: var(--accent-soft); }
+
+/* ---------- views + transitions ---------- */
+.view { display: none; }
+.view.active { display: block; animation: enter .55s var(--ease) both; }
+@keyframes enter { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+/* ---------- cover ---------- */
+.cover { padding-block: 72px 36px; display: grid; gap: 20px; }
+.eyebrow { font: 500 14px/1.3 var(--sans); color: var(--ink-2); }
+.name { font: 600 clamp(40px, 7.5vw, 76px)/1 var(--sans); letter-spacing: -.035em; }
+.role { font: 600 clamp(18px, 2.4vw, 22px)/1.35 var(--sans); color: var(--accent); }
+.intro { max-width: 62ch; color: var(--ink-2); font-size: 17px; }
+.spark { width: 100%; max-width: 520px; height: 56px; margin-top: 6px; }
+.spark path { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 900; stroke-dashoffset: 900; animation: draw 2.2s .3s var(--ease) forwards; }
+.spark circle { fill: var(--mark); opacity: 0; animation: pop .4s 2.3s forwards; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+@keyframes pop { to { opacity: 1; } }
+
+.chapters { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; padding-block: 20px 72px; }
+.chap { text-align: left; background: var(--sheet); border: 1px solid var(--rule); border-radius: 12px; padding: 22px 20px 20px; cursor: pointer; display: grid; gap: 10px; align-content: start; transition: transform .35s var(--ease), border-color .25s, box-shadow .35s; min-width: 0; }
+.chap:hover { transform: translateY(-4px); border-color: #c9d6cf; box-shadow: 0 14px 30px -18px rgba(22, 40, 33, .35); }
+.chap .no { font: 500 13px/1 var(--sans); color: var(--ink-2); }
+.chap h2 { font: 600 21px/1.2 var(--sans); }
+.chap p { color: var(--ink-2); font-size: 14.5px; }
+.chap .go { margin-top: 6px; font: 500 13.5px/1 var(--sans); color: var(--ink); display: inline-flex; gap: 8px; align-items: center; }
+.chap .go span { transition: transform .3s var(--ease); }
+.chap:hover .go span { transform: translateX(5px); }
+
+/* ---------- chapter page ---------- */
+.ch-head { padding-block: 56px 26px; display: grid; gap: 12px; border-bottom: 1px solid var(--rule); }
+.ch-head h1 { font: 600 clamp(32px, 5.5vw, 52px)/1.05 var(--sans); letter-spacing: -.03em; }
+.ch-head h1 .ar { font: italic 400 .8em var(--serif); color: var(--accent); }
+.ch-head p { color: var(--ink-2); max-width: 62ch; }
+.toc { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.toc a { text-decoration: none; font: 500 13px/1 var(--sans); padding: 8px 10px; border: 1px solid var(--rule); border-radius: 999px; background: var(--sheet); color: var(--ink-2); transition: color .2s, border-color .2s; }
+.toc a:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ---------- case ---------- */
+.case { display: grid; gap: 22px; padding-block: 56px; border-bottom: 1px solid var(--rule); scroll-margin-top: 64px; }
+.case:last-of-type { border-bottom: 0; }
+.c-top { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 28px 40px; align-items: end; }
+.c-id { display: grid; gap: 10px; align-content: start; }
+.c-id .logo { width: 44px; height: auto; margin-bottom: 4px; }
+.tl { font: 500 13px/1 var(--sans); color: var(--ink-2); }
+.tag { font: 500 13.5px/1.3 var(--sans); color: var(--accent); }
+.case h3 { font: 600 clamp(24px, 3.2vw, 32px)/1.15 var(--sans); letter-spacing: -.02em; }
+.badge { display: inline-block; margin-left: 10px; font: 500 12px/1 var(--sans); color: var(--mark); border: 1px solid #ead8b3; background: #fdf7ea; padding: 5px 7px; border-radius: 4px; vertical-align: 6px; }
+.what { color: var(--ink-2); font-size: 16.5px; max-width: 52ch; }
+.note { font-size: 14.5px; color: var(--ink); background: var(--accent-soft); border-radius: 8px; padding: 11px 14px; justify-self: start; }
+
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); gap: 10px; }
+.kpi { background: var(--sheet); border: 1px solid var(--rule); border-radius: 10px; padding: 14px 14px 12px; display: grid; gap: 4px; align-content: start; }
+.kpi strong { font: 600 clamp(20px, 2.3vw, 24px)/1.1 var(--sans); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.kpi strong.hi { color: var(--mark); }
+.kpi small { font-size: 12.5px; line-height: 1.35; color: var(--ink-2); }
+
+/* the process: numbered, ordered steps grouped by phase */
+.flow { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); gap: 10px; }
+.flow li { --ph: var(--accent); position: relative; display: grid; grid-template-rows: auto auto auto 1fr; gap: 3px; padding: 11px 12px 13px; background: var(--sheet); border: 1px solid var(--rule); border-top: 3px solid var(--ph); border-radius: 9px; min-width: 0; }
+.flow li.p-ai { --ph: var(--mark); }
+.flow li.p-out { --ph: #3b5b8c; }
+.flow .ph { font: 600 11.5px/1 var(--sans); color: var(--ph); min-height: 11px; }
+.flow .n { font: 500 12px/1.4 var(--mono); color: #9aa69f; margin-top: 4px; }
+.flow b { font: 600 14.5px/1.3 var(--sans); }
+.flow .d { font-size: 12.5px; line-height: 1.45; color: var(--ink-2); }
+.flow li:not(:last-child)::after { content: ""; position: absolute; right: -8px; top: 50%; width: 6px; height: 6px; border-top: 1.5px solid #aab5af; border-right: 1.5px solid #aab5af; transform: translateY(-50%) rotate(45deg); }
+.case.in .flow li { animation: step .55s var(--ease) both; animation-delay: calc(var(--i) * 70ms + 120ms); }
+@keyframes step { from { opacity: 0; transform: translateY(10px); } }
+
+/* figures */
+.fig { margin: 4px 0 0; display: grid; gap: 8px; min-width: 0; }
+.fig figcaption { font-size: 12.5px; color: var(--ink-2); }
+.shot { all: unset; display: block; cursor: zoom-in; border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; background: #fff; transition: box-shadow .4s var(--ease); }
+.shot:hover { box-shadow: 0 18px 36px -24px rgba(22, 40, 33, .45); }
+.shot img { width: auto; height: auto; max-height: 480px; margin: 0 auto; transition: opacity .25s; }
+.tabs { display: inline-flex; gap: 4px; padding: 4px; background: #eceee9; border-radius: 9px; justify-self: start; max-width: 100%; overflow-x: auto; }
+.tabs button { border: 0; background: none; font: 500 13px/1 var(--sans); color: var(--ink-2); padding: 8px 12px; border-radius: 6px; cursor: pointer; white-space: nowrap; }
+.tabs button[aria-selected="true"] { background: var(--sheet); color: var(--ink); box-shadow: 0 1px 2px rgba(0, 0, 0, .08); }
+
+.chart { border: 1px solid var(--rule); border-radius: 10px; background: var(--sheet); padding: 20px; overflow-x: auto; }
+.chart svg { display: block; width: 100%; max-width: 640px; margin: 0 auto; min-width: 460px; height: auto; }
+.chart.schema svg { max-width: none; min-width: 680px; }
+.schema-cards { display: none; }
+.hbars { display: grid; gap: 16px; max-width: 640px; margin: 0 auto; }
+.hb { display: grid; grid-template-columns: 150px minmax(0, 1fr); column-gap: 14px; row-gap: 3px; align-items: center; }
+.hb-n { grid-row: span 2; font: 500 13.5px/1.3 var(--sans); text-align: right; }
+.hb-t { display: flex; align-items: center; gap: 8px; }
+.hb-t i { display: block; height: 10px; border-radius: 2px; }
+.hb-t + .hb-t i { height: 14px; }
+.hb-t em { font: 400 12px var(--mono); font-style: normal; color: var(--ink-2); }
+.hb-t em.v { color: var(--ink); font-weight: 500; }
+i.bar-b { background: #d3dcd7; } i.bar-a { background: var(--accent); }
+.legend { font: 400 12px var(--mono); color: var(--ink-2); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.hbars .legend { padding-left: 164px; }
+.sw { width: 11px; height: 11px; border-radius: 2px; display: inline-block; margin-left: 8px; }
+.sw:first-child { margin-left: 0; }
+.sw.b { background: #d3dcd7; } .sw.a, .sw.f { background: var(--accent); } .sw.m { background: var(--mark); }
+.vbars { max-width: 640px; margin: 0 auto; display: grid; gap: 14px; }
+.vb-plot { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; height: 250px; }
+.vb-g { display: grid; grid-template-rows: 1fr auto; min-width: 0; }
+.vb-g > span { font: 500 13px/1 var(--sans); text-align: center; padding-top: 9px; }
+.vb-cols { display: flex; gap: 4px; justify-content: center; align-items: flex-end; height: 100%; padding-top: 22px; border-bottom: 1px solid #cfd7d2; min-height: 0; }
+.vb-c { width: 38%; max-width: 36px; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px; }
+.vb-c em { font: 500 12.5px var(--mono); font-style: normal; }
+.vb-c i { display: block; width: 100%; border-radius: 2px 2px 0 0; }
+i.col.f { background: var(--accent); } i.col.m { background: var(--mark); }
+.vbars .legend { margin-top: 18px; }
+.chart text { font-family: var(--mono); font-size: 12px; fill: var(--ink-2); }
+.chart text.lbl { font-family: var(--sans); font-size: 13px; fill: var(--ink); font-weight: 500; }
+.chart text.v { fill: var(--ink); font-weight: 500; }
+.chart .grid { stroke: var(--rule); }
+.chart .thr { stroke: var(--mark); stroke-dasharray: 3 4; }
+.schema .tbl rect { fill: #fff; stroke: #cfd7d2; }
+.schema .tbl rect.th { fill: var(--accent-soft); stroke: none; }
+.schema .tbl line { stroke: #edf0ed; }
+.schema .tbl text { font-size: 12px; fill: var(--ink); }
+.schema .tbl text.tn { font: 600 13px var(--sans); fill: var(--accent); }
+.schema .tbl text.k { font-size: 10.5px; font-weight: 500; }
+.schema .tbl text.pk { fill: var(--mark); }
+.schema .tbl text.fk { fill: #3b5b8c; }
+.schema .rel path { fill: none; stroke: #9aa69f; stroke-width: 1.4; }
+.bar-b, .bar-a { transform-origin: left; }
+.col { transform-origin: bottom; }
+.in .bar-a { animation: grow 1s var(--ease) both; }
+.in .bar-b { animation: grow .7s var(--ease) both; }
+.in .col { animation: rise .9s var(--ease) both; }
+@keyframes grow { from { transform: scaleX(0); } }
+@keyframes rise { from { transform: scaleY(0); } }
+.stl path { fill: none; stroke-linecap: round; }
+.in .stl path { stroke-dasharray: 1400; animation: draw2 2s var(--ease) both; }
+@keyframes draw2 { from { stroke-dashoffset: 1400; } to { stroke-dashoffset: 0; } }
+.in .schema .rel path { stroke-dasharray: 600; animation: draw3 1.4s .3s var(--ease) both; }
+@keyframes draw3 { from { stroke-dashoffset: 600; } to { stroke-dashoffset: 0; } }
+
+.logbox { padding: 6px 0; }
+.log-h { font: 500 11.5px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); padding: 12px 18px 10px; }
+.log-r { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 18px; border-top: 1px solid var(--rule); font-size: 14.5px; }
+.log-id { font: 500 13px var(--mono); color: var(--ink-2); }
+.st { font: 500 11.5px/1 var(--mono); padding: 5px 8px; border-radius: 4px; background: #f3efe6; color: #8a5d10; }
+.st.ok { background: var(--accent-soft); color: var(--accent); }
+
+.next { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-block: 34px 70px; border-top: 1px solid var(--rule); flex-wrap: wrap; }
+.next button { background: var(--ink); color: #fff; border: 0; border-radius: 999px; padding: 13px 20px; font: 500 14.5px/1 var(--sans); cursor: pointer; display: inline-flex; gap: 10px; align-items: center; transition: background .2s, transform .3s var(--ease); }
+.next button:hover { background: var(--accent); transform: translateX(3px); }
+.next .back { background: none; color: var(--ink-2); border: 1px solid var(--rule); }
+.next .back:hover { background: var(--sheet); color: var(--ink); transform: none; }
+
+/* reveal: only for elements below the first screen, set by script */
+.pre { opacity: 0; transform: translateY(18px); }
+.reveal { transition: opacity .7s var(--ease), transform .7s var(--ease); }
+
+/* ---------- footer ---------- */
+footer { background: var(--sheet); border-top: 1px solid var(--rule); }
+.foot { padding-block: 30px 40px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.ct { display: grid; gap: 5px; min-width: 0; padding: 12px 14px; border: 1px solid var(--rule); border-radius: 10px; }
+.ct .l { font: 500 12.5px/1 var(--sans); color: var(--ink-2); }
+.ct .v { font: 500 14.5px/1.4 var(--sans); overflow-wrap: anywhere; user-select: all; text-decoration: none; }
+.ct a.v { color: var(--accent); }
+.ct .row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.copy { flex: none; font: 500 12px var(--sans); background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 5px 9px; cursor: pointer; }
+.copy:hover { border-color: var(--accent); }
+
+/* lightbox */
+dialog.lb { border: 0; padding: 0; background: transparent; max-width: min(1200px, 94vw); }
+dialog.lb[open] { animation: enter .35s var(--ease); }
+dialog.lb::backdrop { background: rgba(18, 26, 23, .8); }
+dialog.lb img { max-height: 86vh; width: auto; border-radius: 8px; margin: 0 auto; }
+dialog.lb button { position: absolute; top: 8px; right: 8px; border: 0; border-radius: 6px; background: #fff; padding: 6px 10px; font: 600 13px var(--sans); cursor: pointer; }
+
+@media (max-width: 820px) {
+  .chapters { grid-template-columns: 1fr; padding-block: 12px 52px; }
+  .c-top { grid-template-columns: 1fr; gap: 18px; }
+  .case { padding-block: 40px; gap: 18px; }
+  .foot { grid-template-columns: 1fr; }
+  .cover { padding-block: 44px 24px; }
+  .nav button { padding: 7px 7px; font-size: 12.5px; }
+}
+@media (max-width: 640px) {
+  .flow { grid-template-columns: 1fr; gap: 8px; }
+  .flow li { grid-template-columns: 26px minmax(0, 1fr); grid-template-rows: none; column-gap: 8px; row-gap: 2px; padding: 10px 12px; border-top-width: 1px; border-left: 3px solid var(--ph); }
+  .flow .ph { grid-column: 1 / -1; min-height: 0; }
+  .flow .ph:empty { display: none; }
+  .flow .n { margin: 0; grid-row: span 2; padding-top: 1px; }
+  .flow li:not(:last-child)::after { right: auto; left: 22px; top: auto; bottom: -7px; transform: rotate(135deg); }
+  .kpis { grid-template-columns: repeat(auto-fit, minmax(92px, 1fr)); gap: 8px; }
+  .kpi { padding: 11px 11px 10px; }
+  .kpi strong { font-size: 19px; }
+  .kpi small { font-size: 12px; }
+  .chart .schema-svg { display: none; }
+  .chart.schema { overflow: visible; }
+  .schema-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .st-c { border: 1px solid #cfd7d2; border-radius: 7px; overflow: hidden; display: grid; align-content: start; }
+  .st-c b { font: 600 12.5px/1 var(--sans); color: var(--accent); background: var(--accent-soft); padding: 7px 8px; }
+  .st-c span { display: flex; justify-content: space-between; gap: 4px; padding: 4px 8px; border-top: 1px solid #edf0ed; }
+  .st-c code { font: 400 11px var(--mono); overflow-wrap: anywhere; }
+  .st-c small { font: 500 9.5px var(--mono); }
+  .st-c small.pk { color: var(--mark); } .st-c small.fk { color: #3b5b8c; }
+  .hb { grid-template-columns: minmax(0, 1fr); }
+  .hb-n { grid-row: auto; text-align: left; font-size: 13px; }
+  .hbars .legend { padding-left: 0; }
+  .vb-plot { height: 210px; }
+  .vb-c em { font-size: 10px; }
+  .vb-g > span { font-size: 11.5px; }
+  .chart { padding: 14px; }
+}
+@media (max-width: 460px) { .brand { font-size: 13.5px; } .nav { gap: 0; flex-wrap: nowrap; } .nav button { font-size: 12px; padding: 7px 6px; } }
+@media (max-width: 400px) { .brand .sur { display: none; } }
+.brand, .nav button { white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .spark path { stroke-dashoffset: 0; } .spark circle { opacity: 1; } .pre { opacity: 1; transform: none; }
+}
+
+</style>
+</head>
+<body>
+<header class="bar" id="bar">
+  <div class="wrap">
+    <button class="brand" data-go="home">Faisal<span class="sur"> Alrashed</span></button>
+    <nav class="nav" aria-label="Chapters">
+      <button data-go="university">University</button>
+      <button data-go="training">Training</button>
+      <button data-go="side">Side project</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="view" id="v-home" data-view="home">
+    <div class="wrap">
+      <div class="cover">
+        <p class="eyebrow">Riyadh, Saudi Arabia</p>
+        <h1 class="name">Faisal Ibrahim<br>Alrashed</h1>
+        <p class="role">AI &amp; Data Analytics Specialist</p>
+        <p class="intro">Hands-on experience in data analysis, data cleaning, visualization, and transforming data into actionable insights. Skilled in Python and Power BI. Experienced in building AI-powered solutions using NLP, RAG, Computer Vision, LLMs, and Agentic AI. Passionate about continuous learning and continuously improving technical skills.</p>
+      </div>
+      <div class="chapters">
+        <button class="chap" data-go="university">
+          <span class="no">2022–2026</span>
+          <h2>University Projects</h2>
+          <p>Databases, data analysis, machine learning and computer vision.</p>
+          <span class="go">5 projects <span>→</span></span>
+        </button>
+        <button class="chap" data-go="training">
+          <span class="no">2025–2026</span>
+          <h2>Cooperative Training</h2>
+          <p>Data &amp; AI intern at TCC.</p>
+          <span class="go">4 projects <span>→</span></span>
+        </button>
+        <button class="chap" data-go="side">
+          <span class="no">2026</span>
+          <h2>Side Project</h2>
+          <p>Khuta, a multi-agent AI platform.</p>
+          <span class="go">1 project <span>→</span></span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="v-university" data-view="university">
+    <div class="wrap">
+      <div class="ch-head">
+        <p class="eyebrow">University of Hail</p>
+        <h1>University Projects</h1>
+        <nav class="toc" aria-label="Projects"><a href="#u-db">Database</a><a href="#u-hr">HR Attrition</a><a href="#u-iphone">iPhone Buyers</a><a href="#u-sales">Sales Performance</a><a href="#u-auhse">AUHSE</a></nav>
+      </div>
+      
+      <article class="case" id="u-db">
+        <div class="c-top">
+          <div class="c-id"><p class="tag">Database design · MySQL</p><h3>Attendance System Database</h3><p class="what">Relational database for attendance across users, devices and shifts.</p></div>
+          <div class="kpis"><div class="kpi"><strong class="">6</strong><small>tables</small></div><div class="kpi"><strong class="">5</strong><small>foreign keys</small></div><div class="kpi"><strong class="">M:N</strong><small>resolved via Register</small></div></div>
+        </div>
+        <ol class="flow"><li class="p-data" style="--i:0"><span class="ph">Design</span><span class="n">01</span><b>Requirements</b><span class="d">5 entities</span></li><li class="p-data" style="--i:1"><span class="ph" aria-hidden="true"></span><span class="n">02</span><b>ER model</b><span class="d">user ↔ device M:N</span></li><li class="p-data" style="--i:2"><span class="ph" aria-hidden="true"></span><span class="n">03</span><b>Schema</b><span class="d">6 tables, keys</span></li><li class="p-out" style="--i:3"><span class="ph">Build</span><span class="n">04</span><b>MySQL tables</b><span class="d">CREATE TABLE scripts</span></li><li class="p-out" style="--i:4"><span class="ph" aria-hidden="true"></span><span class="n">05</span><b>Verify</b><span class="d">DESC on every table</span></li></ol>
+        
+        <figure class="fig tabbed"><div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-src="a/db-er.jpg" data-alt="ER diagram of the attendance system">ER diagram</button><button role="tab" aria-selected="false" data-src="a/db-sql.jpg" data-alt="Tables created in MySQL Workbench">MySQL build</button></div><button class="shot" data-full="a/db-er.jpg"><img src="a/db-er.jpg" alt="ER diagram of the attendance system" width="1268" height="779" style="max-width:min(100%,1268px)" loading="lazy"></button></figure>
+      </article>
+      <article class="case" id="u-hr">
+        <div class="c-top">
+          <div class="c-id"><p class="tag">Data analysis · Machine learning</p><h3>Employee Attrition Prediction</h3><p class="what">Predicts which employees are likely to leave.</p></div>
+          <div class="kpis"><div class="kpi"><strong class="hi">86%</strong><small>F1 score, up from 17%</small></div><div class="kpi"><strong class="">87%</strong><small>recall</small></div><div class="kpi"><strong class="">85%</strong><small>precision</small></div></div>
+        </div>
+        <ol class="flow"><li class="p-data" style="--i:0"><span class="ph">Data</span><span class="n">01</span><b>Load</b><span class="d">1,470 × 35, IBM HR</span></li><li class="p-data" style="--i:1"><span class="ph" aria-hidden="true"></span><span class="n">02</span><b>EDA</b><span class="d">income, age, distance</span></li><li class="p-data" style="--i:2"><span class="ph" aria-hidden="true"></span><span class="n">03</span><b>Prepare</b><span class="d">encoding, scaling</span></li><li class="p-ai" style="--i:3"><span class="ph">Model</span><span class="n">04</span><b>Balance</b><span class="d">SMOTE, 16% minority</span></li><li class="p-ai" style="--i:4"><span class="ph" aria-hidden="true"></span><span class="n">05</span><b>Train</b><span class="d">10 classifiers</span></li><li class="p-ai" style="--i:5"><span class="ph" aria-hidden="true"></span><span class="n">06</span><b>Tune</b><span class="d">GridSearchCV</span></li><li class="p-ai" style="--i:6"><span class="ph" aria-hidden="true"></span><span class="n">07</span><b>Evaluate</b><span class="d">precision, recall, F1</span></li></ol>
+        
+        <figure class="fig tabbed"><div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-src="a/hr-attr.jpg" data-alt="Distribution of attrition">Attrition split</button><button role="tab" aria-selected="false" data-src="a/hr-f1.jpg" data-alt="F1 score and run time per model after tuning">F1 after tuning</button></div><button class="shot" data-full="a/hr-attr.jpg"><img src="a/hr-attr.jpg" alt="Distribution of attrition" width="1272" height="944" style="max-width:min(100%,1272px)" loading="lazy"></button></figure>
+      </article>
+      <article class="case" id="u-iphone">
+        <div class="c-top">
+          <div class="c-id"><p class="tag">Data analysis · Machine learning</p><h3>Who Buys an iPhone?</h3><p class="what">Finds the customer profile most likely to buy.</p></div>
+          <div class="kpis"><div class="kpi"><strong class="hi">99%</strong><small>accuracy</small></div><div class="kpi"><strong class="">90k</strong><small>SAR salary where buying jumps</small></div><div class="kpi"><strong class="">46–65</strong><small>core buyer age</small></div></div>
+        </div>
+        <ol class="flow"><li class="p-data" style="--i:0"><span class="ph">Data</span><span class="n">01</span><b>Load</b><span class="d">959 customers, 4 fields</span></li><li class="p-data" style="--i:1"><span class="ph" aria-hidden="true"></span><span class="n">02</span><b>Clean</b><span class="d">0 missing values</span></li><li class="p-data" style="--i:2"><span class="ph" aria-hidden="true"></span><span class="n">03</span><b>EDA</b><span class="d">age, salary, gender</span></li><li class="p-ai" style="--i:3"><span class="ph">Model</span><span class="n">04</span><b>Prepare</b><span class="d">encoding, scaling, 80/20</span></li><li class="p-ai" style="--i:4"><span class="ph" aria-hidden="true"></span><span class="n">05</span><b>Compare</b><span class="d">6 classifiers</span></li><li class="p-ai" style="--i:5"><span class="ph" aria-hidden="true"></span><span class="n">06</span><b>Select</b><span class="d">Decision Tree</span></li></ol>
+        
+        <figure class="fig tabbed"><div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-src="a/ip-rate.jpg" data-alt="Purchase rate by age group and gender">Purchase rate by age</button><button role="tab" aria-selected="false" data-src="a/ip-salary.jpg" data-alt="Salary distribution by purchase">Salary vs purchase</button><button role="tab" aria-selected="false" data-src="a/ip-models.jpg" data-alt="Accuracy, precision, recall and F1 per model">Model comparison</button></div><button class="shot" data-full="a/ip-rate.jpg"><img src="a/ip-rate.jpg" alt="Purchase rate by age group and gender" width="1600" height="884" style="max-width:min(100%,1600px)" loading="lazy"></button></figure>
+      </article>
+      <article class="case" id="u-sales">
+        <div class="c-top">
+          <div class="c-id"><p class="tag">Data analysis · Power BI</p><h3>Online Store Sales Performance</h3><p class="what">Two years of sales turned into KPIs and a Power BI dashboard. Team of four.</p></div>
+          <div class="kpis"><div class="kpi"><strong class="">€113.4M</strong><small>revenue</small></div><div class="kpi"><strong class="hi">€19.0M</strong><small>profit</small></div><div class="kpi"><strong class="">17%</strong><small>margin</small></div></div>
+        </div>
+        <ol class="flow"><li class="p-data" style="--i:0"><span class="ph">Data</span><span class="n">01</span><b>Load</b><span class="d">1,000 orders × 10, Kaggle</span></li><li class="p-data" style="--i:1"><span class="ph" aria-hidden="true"></span><span class="n">02</span><b>Clean</b><span class="d">0 missing, 0 duplicates</span></li><li class="p-data" style="--i:2"><span class="ph" aria-hidden="true"></span><span class="n">03</span><b>Feature</b><span class="d">Profit = value − cost</span></li><li class="p-data" style="--i:3"><span class="ph" aria-hidden="true"></span><span class="n">04</span><b>EDA</b><span class="d">category, country, month</span></li><li class="p-out" style="--i:4"><span class="ph">Dashboard</span><span class="n">05</span><b>KPIs</b><span class="d">DAX measures</span></li><li class="p-out" style="--i:5"><span class="ph" aria-hidden="true"></span><span class="n">06</span><b>Dashboard</b><span class="d">Power BI with slicers</span></li></ol>
+        
+        <figure class="fig tabbed"><div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-src="a/ba-dash.jpg" data-alt="Sales performance dashboard in Power BI">Dashboard</button><button role="tab" aria-selected="false" data-src="a/ba-cat.jpg" data-alt="Sales by category">Sales by category</button><button role="tab" aria-selected="false" data-src="a/ba-trend.jpg" data-alt="Monthly profit trend">Monthly profit</button></div><button class="shot" data-full="a/ba-dash.jpg"><img src="a/ba-dash.jpg" alt="Sales performance dashboard in Power BI" width="911" height="489" style="max-width:min(100%,911px)" loading="lazy"></button></figure>
+      </article>
+      <article class="case" id="u-auhse">
+        <div class="c-top">
+          <div class="c-id"><p class="tag">Graduation project · Computer vision · LLM</p><h3>AUHSE: AI Safety Inspections</h3><p class="what">Construction-site photo in, audit-ready safety report out. Team of six.</p></div>
+          <div class="kpis"><div class="kpi"><strong class="hi">~30 s</strong><small>vs 30–60 min manual</small></div><div class="kpi"><strong class="">0.684</strong><small>mAP@50, up from 0.52</small></div><div class="kpi"><strong class="">3 of 4</strong><small>benchmarks led vs commercial tools</small></div></div>
+        </div>
+        <ol class="flow"><li class="p-data" style="--i:0"><span class="ph">Data</span><span class="n">01</span><b>Dataset</b><span class="d">site images, curated</span></li><li class="p-ai" style="--i:1"><span class="ph">AI</span><span class="n">02</span><b>Detect</b><span class="d">YOLOv8 fine-tuned</span></li><li class="p-ai" style="--i:2"><span class="ph" aria-hidden="true"></span><span class="n">03</span><b>Filter</b><span class="d">relevance gate</span></li><li class="p-ai" style="--i:3"><span class="ph" aria-hidden="true"></span><span class="n">04</span><b>Analyse</b><span class="d">VLM → JSON</span></li><li class="p-ai" style="--i:4"><span class="ph" aria-hidden="true"></span><span class="n">05</span><b>Score</b><span class="d">5×5 risk matrix</span></li><li class="p-out" style="--i:5"><span class="ph">Delivery</span><span class="n">06</span><b>Report</b><span class="d">DOCX</span></li><li class="p-out" style="--i:6"><span class="ph" aria-hidden="true"></span><span class="n">07</span><b>Deploy</b><span class="d">web platform</span></li></ol>
+        
+        <figure class="fig tabbed"><div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-src="a/au-landing.jpg" data-alt="AUHSE web platform">Platform</button><button role="tab" aria-selected="false" data-src="a/au-detect.jpg" data-alt="Detected hazards in an inspection">Detection report</button><button role="tab" aria-selected="false" data-src="a/au-bench.jpg" data-alt="Benchmark against commercial tools">Benchmark</button></div><button class="shot" data-full="a/au-landing.jpg"><img src="a/au-landing.jpg" alt="AUHSE web platform" width="1400" height="840" style="max-width:min(100%,1400px)" loading="lazy"></button></figure>
+      </article>
+      <div class="next"><button class="back" data-go="home">← All chapters</button><button data-go="training">Next: Cooperative Training <span>→</span></button></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-training" data-view="training">
+    <div class="wrap">
+      <div class="ch-head">
+        <p class="eyebrow">Jul 2025 – Jan 2026</p>
+        <h1>Cooperative Training</h1>
+        <p>Data Analyst &amp; AI Developer Intern at Technology Control Company (TCC).</p>
+        <nav class="toc" aria-label="Projects"><a href="#t-sent">Sentiment</a><a href="#t-tour">Tourism</a><a href="#t-rag">RAG</a><a href="#t-id">ID Extraction</a></nav>
+      </div>
+      
+      <article class="case" id="t-sent">
+        <div class="c-top">
+          <div class="c-id"><p class="tl">Months 1–2</p><p class="tag">Data analysis · Sentiment · Power BI</p><h3>Employee &amp; Brand Sentiment</h3><p class="what">30k reviews turned into dashboards for marketing.</p></div>
+          <div class="kpis"><div class="kpi"><strong class="">30k</strong><small>reviews analysed</small></div><div class="kpi"><strong class="hi">45%</strong><small>positive</small></div><div class="kpi"><strong class="">35%</strong><small>negative</small></div></div>
+        </div>
+        <ol class="flow"><li class="p-data" style="--i:0"><span class="ph">Data</span><span class="n">01</span><b>Collect</b><span class="d">6 companies + 500 LinkedIn</span></li><li class="p-data" style="--i:1"><span class="ph" aria-hidden="true"></span><span class="n">02</span><b>Profile</b><span class="d">30,336 × 17</span></li><li class="p-data" style="--i:2"><span class="ph" aria-hidden="true"></span><span class="n">03</span><b>Clean</b><span class="d">missing values per column</span></li><li class="p-data" style="--i:3"><span class="ph" aria-hidden="true"></span><span class="n">04</span><b>EDA</b><span class="d">ratings, roles, locations</span></li><li class="p-data" style="--i:4"><span class="ph" aria-hidden="true"></span><span class="n">05</span><b>Sentiment</b><span class="d">labels + word clouds</span></li><li class="p-out" style="--i:5"><span class="ph">Dashboard</span><span class="n">06</span><b>Employee</b><span class="d">Power BI</span></li><li class="p-out" style="--i:6"><span class="ph" aria-hidden="true"></span><span class="n">07</span><b>Brand tracker</b><span class="d">to marketing needs</span></li></ol>
+        
+        <figure class="fig tabbed"><div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-src="a/co-emp.jpg" data-alt="Employee experience dashboard">Employee Experience</button><button role="tab" aria-selected="false" data-src="a/co-prod.jpg" data-alt="Products overview dashboard">Products Overview</button></div><button class="shot" data-full="a/co-emp.jpg"><img src="a/co-emp.jpg" alt="Employee experience dashboard" width="1134" height="641" style="max-width:min(100%,1134px)" loading="lazy"></button></figure>
+      </article>
+      <article class="case" id="t-tour">
+        <div class="c-top">
+          <div class="c-id"><p class="tl">Months 3–4</p><p class="tag">Time series · Feature engineering</p><h3>Tourism Demand Data<span class="badge">Main project</span></h3><p class="what">A real tourism dataset prepared for demand forecasting.</p></div>
+          <div class="kpis"><div class="kpi"><strong class="hi">Forecast-ready</strong><small>dataset delivered to modelling</small></div></div>
+        </div>
+        <ol class="flow"><li class="p-data" style="--i:0"><span class="ph">Data</span><span class="n">01</span><b>Validate</b><span class="d">duplicates, missing</span></li><li class="p-data" style="--i:1"><span class="ph" aria-hidden="true"></span><span class="n">02</span><b>EDA</b><span class="d">trends over time</span></li><li class="p-data" style="--i:2"><span class="ph" aria-hidden="true"></span><span class="n">03</span><b>Seasonality</b><span class="d">STL decomposition</span></li><li class="p-ai" style="--i:3"><span class="ph">Features</span><span class="n">04</span><b>Lags</b><span class="d">past demand</span></li><li class="p-ai" style="--i:4"><span class="ph" aria-hidden="true"></span><span class="n">05</span><b>Decay</b><span class="d">fading effects</span></li><li class="p-ai" style="--i:5"><span class="ph" aria-hidden="true"></span><span class="n">06</span><b>Select</b><span class="d">Mutual Information</span></li><li class="p-ai" style="--i:6"><span class="ph" aria-hidden="true"></span><span class="n">07</span><b>Merge</b><span class="d">into main dataset</span></li></ol>
+        
+        <figure class="fig"><div class="chart" data-anim><svg viewBox="0 0 620 210" role="img" aria-label="Method illustration: series split into trend, seasonal and residual parts"><g text-anchor="start"><text class="lbl" x="0" y="20">Observed</text><text class="lbl" x="0" y="88">Trend</text><text class="lbl" x="0" y="132">Seasonal</text><text class="lbl" x="0" y="186">Residual</text></g><g class="stl"><path id="p-obs" stroke="#161b19" stroke-width="1.6"/><path id="p-trd" stroke="#1f5c4a" stroke-width="2.4"/><path id="p-sea" stroke="#b97a12" stroke-width="1.8"/><path id="p-res" stroke="#9aa69f" stroke-width="1.2"/></g></svg></div><figcaption>Method illustration: STL decomposition.</figcaption></figure>
+      </article>
+      <article class="case" id="t-rag">
+        <div class="c-top">
+          <div class="c-id"><p class="tl">Month 5</p><p class="tag">LLM evaluation · Prompt engineering</p><h3>Enterprise RAG Assistant</h3><p class="what">Testing and improving the company&#x27;s internal AI assistant.</p></div>
+          
+        </div>
+        <ol class="flow"><li class="p-ai" style="--i:0"><span class="ph">AI</span><span class="n">01</span><b>Test</b><span class="d">multi-turn questions</span></li><li class="p-ai" style="--i:1"><span class="ph" aria-hidden="true"></span><span class="n">02</span><b>Validate</b><span class="d">answer relevance</span></li><li class="p-ai" style="--i:2"><span class="ph" aria-hidden="true"></span><span class="n">03</span><b>Log</b><span class="d">structured issues</span></li><li class="p-ai" style="--i:3"><span class="ph" aria-hidden="true"></span><span class="n">04</span><b>Improve</b><span class="d">base prompts</span></li></ol>
+        
+        <figure class="fig tabbed"><div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-src="a/rag-5.jpg" data-alt="Issue 5: follow-up questions treated as unrelated">Issue 5</button><button role="tab" aria-selected="false" data-src="a/rag-6.jpg" data-alt="Issue 6: assistant stops after the seventh question">Issue 6</button></div><button class="shot" data-full="a/rag-5.jpg"><img src="a/rag-5.jpg" alt="Issue 5: follow-up questions treated as unrelated" width="708" height="489" style="max-width:min(100%,708px)" loading="lazy"></button></figure>
+      </article>
+      <article class="case" id="t-id">
+        <div class="c-top">
+          <div class="c-id"><p class="tl">Month 6</p><p class="tag">Computer vision · OCR</p><h3>ID Detection &amp; Extraction</h3><p class="what">Reads ID documents automatically, replacing manual entry.</p></div>
+          
+        </div>
+        <ol class="flow"><li class="p-ai" style="--i:0"><span class="ph">AI</span><span class="n">01</span><b>Input</b><span class="d">ID photo</span></li><li class="p-ai" style="--i:1"><span class="ph" aria-hidden="true"></span><span class="n">02</span><b>Detect</b><span class="d">YOLOv8</span></li><li class="p-ai" style="--i:2"><span class="ph" aria-hidden="true"></span><span class="n">03</span><b>Crop</b><span class="d">bounding box</span></li><li class="p-ai" style="--i:3"><span class="ph" aria-hidden="true"></span><span class="n">04</span><b>Enhance</b><span class="d">OpenCV</span></li><li class="p-ai" style="--i:4"><span class="ph" aria-hidden="true"></span><span class="n">05</span><b>Read</b><span class="d">OCR</span></li><li class="p-out" style="--i:5"><span class="ph">Delivery</span><span class="n">06</span><b>Output</b><span class="d">structured .txt</span></li></ol>
+        
+        <figure class="fig tabbed"><div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-src="a/id-intro.jpg" data-alt="ID extraction system overview">Overview</button><button role="tab" aria-selected="false" data-src="a/id-flow.jpg" data-alt="ID extraction pipeline">Pipeline</button></div><button class="shot" data-full="a/id-intro.jpg"><img src="a/id-intro.jpg" alt="ID extraction system overview" width="996" height="591" style="max-width:min(100%,996px)" loading="lazy"></button><figcaption>Sample ID images are not shown to protect personal data.</figcaption></figure>
+      </article>
+      <div class="next"><button class="back" data-go="university">← University Projects</button><button data-go="side">Next: Side Project <span>→</span></button></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-side" data-view="side">
+    <div class="wrap">
+      <div class="ch-head">
+        <p class="eyebrow">Saudi Digital Academy · Agentic AI Bootcamp</p>
+        <h1>Khuta <span class="ar">خُطى</span></h1>
+        <p>Nominated among the bootcamp's top projects.</p>
+      </div>
+      
+      <article class="case" id="s-khuta">
+        <div class="c-top">
+          <div class="c-id"><img class="logo" src="a/khuta-logo.png" alt="Khuta logo" width="219" height="345"><p class="tag">Multi-agent AI · RAG · LangGraph · FastAPI</p><h3>Real work, before the first offer</h3><p class="what">A simulated company run by AI agents, so graduates gain real work experience.</p></div>
+          <div class="kpis"><div class="kpi"><strong class="">10</strong><small>AI agents</small></div><div class="kpi"><strong class="">1,022</strong><small>automated checks</small></div><div class="kpi"><strong class="hi">Top</strong><small>projects nominee</small></div></div>
+        </div>
+        <ol class="flow"><li class="p-ai" style="--i:0"><span class="ph">AI</span><span class="n">01</span><b>Onboard</b><span class="d">CV → profile</span></li><li class="p-ai" style="--i:1"><span class="ph" aria-hidden="true"></span><span class="n">02</span><b>Assign</b><span class="d">Manager agent</span></li><li class="p-ai" style="--i:2"><span class="ph" aria-hidden="true"></span><span class="n">03</span><b>Review</b><span class="d">Mentor agent</span></li><li class="p-ai" style="--i:3"><span class="ph" aria-hidden="true"></span><span class="n">04</span><b>Discuss</b><span class="d">team of agents</span></li><li class="p-ai" style="--i:4"><span class="ph" aria-hidden="true"></span><span class="n">05</span><b>Track</b><span class="d">HR agent</span></li><li class="p-out" style="--i:5"><span class="ph">Delivery</span><span class="n">06</span><b>Employers</b><span class="d">RAG knowledge base</span></li></ol>
+        <p class="note">My role: team lead. Built the agents and the RAG system, planned the work in Notion and managed versions on GitHub.</p>
+        <figure class="fig tabbed"><div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-src="a/kh-week.jpg" data-alt="A week at Khuta">A week at Khuta</button><button role="tab" aria-selected="false" data-src="a/kh-solution.jpg" data-alt="Khuta solution overview">Solution</button></div><button class="shot" data-full="a/kh-week.jpg"><img src="a/kh-week.jpg" alt="A week at Khuta" width="1400" height="787" style="max-width:min(100%,1400px)" loading="lazy"></button></figure>
+      </article>
+      <div class="next"><button class="back" data-go="training">← Cooperative Training</button><button data-go="home">Back to start <span>↺</span></button></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div class="ct"><span class="l">LinkedIn</span><a class="v" href="https://www.linkedin.com/in/faisal-alrashed-537b14319" target="_blank" rel="noopener">faisal-alrashed-537b14319</a></div>
+    <div class="ct"><span class="l">Email</span><div class="row"><span class="v" id="em">alrashed8f@gmail.com</span><button class="copy" data-copy="em">Copy</button></div></div>
+    <div class="ct"><span class="l">Phone</span><div class="row"><span class="v" id="ph">+966 50 792 5033</span><button class="copy" data-copy="ph">Copy</button></div></div>
+  </div>
+</footer>
+
+<dialog class="lb" id="lb"><button type="button" id="lbx">Close</button><img id="lbi" alt=""></dialog>
+
+<script>
+(function () {
+  var views = {}; document.querySelectorAll('.view').forEach(function (v) { views[v.dataset.view] = v; });
+  var navBtns = document.querySelectorAll('.nav button');
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var current = null;
+  function show(name, anchor, push) {
+    if (!views[name]) name = 'home';
+    if (name === current && !anchor) { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+    current = name;
+    var swap = function () {
+      Object.keys(views).forEach(function (k) { views[k].classList.toggle('active', k === name); });
+      navBtns.forEach(function (b) { b.toggleAttribute('aria-current', b.dataset.go === name); if (b.dataset.go === name) b.setAttribute('aria-current', 'page'); });
+      if (anchor) { var el = document.getElementById(anchor); if (el) el.scrollIntoView(); } else window.scrollTo(0, 0);
+      prepReveal(views[name]);
+    };
+    if (document.startViewTransition && !reduce) document.startViewTransition(swap); else swap();
+    if (push) try { history.pushState(null, '', name === 'home' ? location.pathname : '#' + name); } catch (e) {}
+  }
+  function route() {
+    var h = location.hash.replace('#', '');
+    if (views[h] || !h) return show(h);
+    var el = document.getElementById(h), v = el && el.closest('.view');
+    if (v) show(v.dataset.view, h);
+  }
+  addEventListener('popstate', route);
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a[href^="#"]'); if (!a) return;
+    var el = document.getElementById(a.getAttribute('href').slice(1)); if (!el) return;
+    e.preventDefault(); el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  });
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-go]'); if (b) { e.preventDefault(); show(b.dataset.go, null, true); }
+  });
+
+  // scroll reveal for content below the first screen
+  var io = 'IntersectionObserver' in window ? new IntersectionObserver(function (es) {
+    es.forEach(function (en) { if (en.isIntersecting) { en.target.classList.remove('pre'); en.target.classList.add('in'); io.unobserve(en.target); } });
+  }, { rootMargin: '0px 0px -8% 0px' }) : null;
+  function prepReveal(view) {
+    var items = view.querySelectorAll('.case, .chart[data-anim]');
+    items.forEach(function (el) {
+      if (!io || reduce) { el.classList.add('in'); return; }
+      var r = el.getBoundingClientRect();
+      if (r.top > innerHeight * 0.9) { el.classList.add('pre', 'reveal'); }
+      io.observe(el);
+    });
+  }
+
+  // initial view from hash
+  var h = location.hash.replace('#', ''), hv = document.getElementById(h);
+  var start = views[h] ? h : (hv && hv.closest('.view') ? hv.closest('.view').dataset.view : 'home');
+  current = start; views[start].classList.add('active'); prepReveal(views[start]);
+  navBtns.forEach(function (b) { if (b.dataset.go === start) b.setAttribute('aria-current', 'page'); });
+
+  // sticky bar border
+  var bar = document.getElementById('bar');
+  addEventListener('scroll', function () { bar.classList.toggle('scrolled', scrollY > 8); }, { passive: true });
+
+  // STL illustration
+  (function () {
+    var N = 72, x0 = 84, x1 = 612, P = { 'p-obs': [], 'p-trd': [], 'p-sea': [], 'p-res': [] };
+    function rnd(i) { var s = Math.sin(i * 12.9898) * 43758.5453; return s - Math.floor(s) - .5; }
+    for (var i = 0; i < N; i++) {
+      var x = x0 + (x1 - x0) * i / (N - 1), t = .3 + .55 * i / N, s = .25 * Math.sin(2 * Math.PI * i / 12) + .1 * Math.sin(4 * Math.PI * i / 12), r = .08 * rnd(i);
+      P['p-obs'].push([x, 60 - (t + s + r) * 42]); P['p-trd'].push([x, 106 - t * 30]); P['p-sea'].push([x, 140 - s * 56]); P['p-res'].push([x, 188 - r * 120]);
+    }
+    for (var k in P) document.getElementById(k).setAttribute('d', P[k].map(function (p, j) { return (j ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1); }).join(''));
+  })();
+
+  // lightbox
+  var lb = document.getElementById('lb'), lbi = document.getElementById('lbi');
+  document.querySelectorAll('.shot').forEach(function (b) {
+    b.addEventListener('click', function () { lbi.src = b.dataset.full; lbi.alt = b.querySelector('img').alt; if (lb.showModal) lb.showModal(); });
+  });
+  document.getElementById('lbx').addEventListener('click', function () { lb.close(); });
+  lb.addEventListener('click', function (e) { if (e.target === lb) lb.close(); });
+
+  // figure tabs
+  document.querySelectorAll('.fig.tabbed').forEach(function (f) {
+    var shot = f.querySelector('.shot'), im = shot.querySelector('img');
+    f.querySelectorAll('[role=tab]').forEach(function (t) {
+      t.addEventListener('click', function () {
+        f.querySelectorAll('[role=tab]').forEach(function (o) { o.setAttribute('aria-selected', o === t ? 'true' : 'false'); });
+        im.style.opacity = 0;
+        var n = new Image(); n.onload = function () { im.src = t.dataset.src; im.alt = t.dataset.alt; im.width = n.naturalWidth; im.height = n.naturalHeight; im.style.maxWidth = 'min(100%,' + n.naturalWidth + 'px)'; shot.dataset.full = t.dataset.src; im.style.opacity = 1; };
+        n.src = t.dataset.src;
+      });
+    });
+  });
+
+  // copy
+  document.querySelectorAll('.copy').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var el = document.getElementById(b.dataset.copy), t = el.textContent.trim();
+      var sel = function () { var r = document.createRange(); r.selectNodeContents(el); var s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = 'Selected'; };
+      try { navigator.clipboard.writeText(t).then(function () { b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy'; }, 1500); }, sel); } catch (e) { sel(); }
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
